@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespaceは被らない名まえににてください -->
+<mapper namespace="mybatsBlowish.mapper">
+
+  <!-- id属性の値がBlowishDAOの返却値に対応しています → return sqlSession.selectList( "selectNoteList"); -->
+  <!-- resultType属性の値がNoteDTO.javaのパスと対応しています。 -->
+  <select id="selectNoteList" resultType="model.dto.NoteListDTO">
+	SELECT
+		note.note_id
+	,	note.title
+	,	GROUP_CONCAT(CONCAT("@", tag.name)) tag
+	,	note.last_update
+	FROM
+		note LEFT OUTER JOIN note2tag ON note.NOTE_ID = note2tag.NOTE_ID
+			LEFT OUTER JOIN tag ON note2tag.TAG_ID = tag.TAG_ID
+	GROUP BY
+		note2tag.note_id
+	ORDER BY
+		note.last_update desc
+	LIMIT 1000
+  </select>
+
+</mapper>
